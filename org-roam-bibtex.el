@@ -257,6 +257,7 @@ used to store a link to the BibTeX buffer.  See
   :group 'org-roam-bibtex)
 
 (defcustom orb-insert-interface 'generic
+  ;; BD I think this can go, or else you can just default to org-cite
   "Interface frontend to use with `orb-insert-link'.
 Possible values are the symbols `helm-bibtex', `ivy-bibtex', or
 `generic' (default).  In the first two cases the respective
@@ -321,6 +322,7 @@ Possible values are `key' and `entry'."
           (const entry)))
 
 (defcustom orb-note-actions-interface 'default
+  ;; BD not sure on this. There are different options.
   "Interface frontend for `orb-note-actions'.
 Supported values (interfaces) are symbols `default', `ido',
 `hydra', `ivy' and `helm'.
@@ -364,6 +366,9 @@ Simple `setq' will not work."
     ("Show record in the bibtex file" . bibtex-completion-show-entry))
   "Default actions for `orb-note-actions'.
 Each action is a cons cell DESCRIPTION . FUNCTION."
+  ;; BD these actions are supported in both the WIP 'org-ref-cite'
+  ;; hydra "follow processor" and the bibtex-actions 'embark-act'-based one.
+  ;; Do you need it?
   :risky t
   :type '(alist
           :tag "Default actions for `orb-note-actions'"
@@ -376,6 +381,8 @@ Each action is a cons cell DESCRIPTION . FUNCTION."
     ("Run Orb PDF Scrapper" . orb-note-actions-scrap-pdf))
   "Extra actions for `orb-note-actions'.
 Each action is a cons cell DESCRIPTION . FUNCTION."
+  ;; BD here's an extension point. Maybe the follow processors in 'org-ref-cite'
+  ;; and 'bibtex-actions' need similar?
   :risky t
   :type '(alist
           :tag "Extra actions for `orb-note-actions'"
@@ -386,6 +393,7 @@ Each action is a cons cell DESCRIPTION . FUNCTION."
 (defcustom orb-note-actions-user nil
   "User actions for `orb-note-actions'.
 Each action is a cons cell DESCRIPTION . FUNCTION."
+  ;; BD note sure about this.
   :risky t
   :type '(alist
           :tag "User actions for `orb-note-actions'"
@@ -704,6 +712,7 @@ Returns the new plist."
 (defun orb-insert--link (node info)
   "Insert a link to NODE.
 INFO contains additional information."
+  ;; BD this needs to be OC-ified
   ;; citekey &optional description lowercase region-text beg end
   (-let (((&plist :region :orb-link-description :orb-citekey) info))
     (when region
@@ -869,6 +878,7 @@ the \"Edit note & insert a link\" action.
 When using `orb-insert-generic', a simple list of available
 citation keys is presented using `completion-read' and after
 choosing a candidate the appropriate link will be inserted."
+  ;; BD also needs to be OC-ified
   (interactive "P")
   ;; parse arg
   ;; C-u or C-u C-u C-u => force lowercase
@@ -949,6 +959,9 @@ choosing a candidate the appropriate link will be inserted."
   ;; we don't use candidates here because for a nice hydra we need each
   ;; group of completions separately (default, extra, user), so just
   ;; silence the compiler
+  ;; BD this can stay, but we need to figure out how to make they
+  ;; actions available in different UIs: embark-act, the org-ref-cite
+  ;; hydra, etc. I will raise this as an issue on org-ref-cite.
   (ignore candidates)
   (let ((k ?a)
         actions)
